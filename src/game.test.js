@@ -17,8 +17,17 @@ test('number sessions contain all factors from 1 to 10', () => {
   assert.deepEqual(tasks.map((task) => task.right).sort((a, b) => a - b), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 })
 
-test('random sessions keep all values within the selected tables', () => {
+test('random sessions contain unique tasks from tables 1 to 10', () => {
   const tasks = createRandomTasks('divide', 10, () => 0.999)
+  const expressions = tasks.map((task) => `${task.left}/${task.right}`)
   assert.equal(tasks.length, 10)
-  assert.ok(tasks.every((task) => task.right === 10 && task.answer === 10 && task.left === 100))
+  assert.equal(new Set(expressions).size, tasks.length)
+  assert.ok(tasks.every((task) => task.right >= 1 && task.right <= 10))
+  assert.ok(tasks.every((task) => task.answer >= 1 && task.answer <= 10))
+})
+
+test('random multiplication sessions do not repeat examples', () => {
+  const tasks = createRandomTasks('multiply', 100, () => 0.5)
+  const expressions = tasks.map((task) => `${task.left}*${task.right}`)
+  assert.equal(new Set(expressions).size, 100)
 })

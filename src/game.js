@@ -22,9 +22,10 @@ export function createNumberTasks(number, operation, random = Math.random) {
 }
 
 export function createRandomTasks(operation, count = 10, random = Math.random) {
-  return Array.from({ length: count }, () => {
-    const number = Math.floor(random() * 10) + 1
-    const factor = Math.floor(random() * 10) + 1
+  const taskPool = Array.from({ length: 100 }, (_, index) => {
+    const number = Math.floor(index / 10) + 1
+    const factor = (index % 10) + 1
     return createTask(number, factor, operation)
   })
+  return shuffle(taskPool, random).slice(0, Math.min(count, taskPool.length))
 }
